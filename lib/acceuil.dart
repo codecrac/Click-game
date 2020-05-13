@@ -57,11 +57,11 @@ class PageAcceuil extends StatelessWidget {
       _goToClickGame(BuildContext context) async {
 
         print('EXECUTION DE DK');
-        dk();
-//        final run = await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){
-//                        return Click1();
-//                        }
-//        ));
+//        dk();
+        final run = await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){
+                        return Click1();
+                        }
+        ));
       }
 
       _goToContactDev(BuildContext context) async{

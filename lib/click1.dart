@@ -142,7 +142,7 @@ class _clickGame extends State<Click1> {
       //SCREEN
     return Scaffold(
       appBar: new AppBar(
-        title: Center( child :Text('Click game',style: TextStyle(fontSize: 20.0))),
+        title: Text('Click game',style: TextStyle(fontSize: 20.0)),
           backgroundColor: Color(0xff009900)
         ),
       body: new SingleChildScrollView(
