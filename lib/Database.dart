@@ -10,6 +10,7 @@ class DatabaseClient {
 
   Future<Database> get db async{
     if(_db !=null){
+      print("existing db");
       return db;
     } else{
       //crer nvlle bd
@@ -25,14 +26,21 @@ class DatabaseClient {
     return bdd;
   }
 
+  Future deleteDb() async{
+    Directory directory = await getApplicationDocumentsDirectory();
+    String db_directory = join(directory.path, 'database.db');
+    await deleteDatabase(db_directory);
+  }
+
 
   Future _onCreate(Database db, int version) async{
     await db.execute(
         '''
          CREATE TABLE IF NOT EXISTS NIVEAU(
-          niveau VARCHAR(255),
-          objectif VARCHAR(255),
-          temps VARCHAR(255)
+          id INTEGER PRIMARY KEY,
+          niveau INTEGER,
+          objectif INTEGER,
+          temps INTEGER
           )
         '''
     );
@@ -42,20 +50,26 @@ class DatabaseClient {
   void createNewItem() async{
     Database maDb = await db ;
     var niveau_atteind = Avancement(1,25,10);
-    var id = await maDb.insert('NIVEAU', niveau_atteind.convertirEnMap());
+    var id = await maDb.rawInsert("INSERT INTO NIVEAU(id,niveau,objectif,temps) VALUES(1,${niveau_atteind.niveau},${niveau_atteind.objectif},${niveau_atteind.temps})" );
     print("article inserer, id = $id");
   }
 
   void updateItem(Avancement avancement) async{
     Database maDb = await db;
-    var a = await maDb.update('NIVEAU', avancement.convertirEnMap(),where: 'niveau = ?',whereArgs: [1]);
+    await maDb.rawUpdate("UPDATE NIVEAU SET niveau = ${avancement.niveau}, objectif = ${avancement.objectif}, temps = ${avancement.temps} WHERE id = 1");
+    print("update successfuly");
   }
 
-  void recupererSeulItem() async{
+  Future<Map<String,dynamic>> recupererSeulItem() async{
+//    print("recup");
     Database maDb = await db;
-    List<Map<String,dynamic>> avancement = await maDb.rawQuery("SELECT * FROM NIVEAU");
-    var avancer = avancement[0];
-    print(avancer);
+    List<Map<String,dynamic>> resultat = await maDb.rawQuery("SELECT * FROM NIVEAU");
+    var avancer = resultat[0];
+    Avancement infosNiveau = new Avancement(avancer['niveau'], avancer['objectif'], avancer['temps']);
+//    print('recup avancer = $avancer');
+    print('recup info from db = ${infosNiveau.convertirEnMap()}');
+    return infosNiveau.convertirEnMap();
+//    print(avancer);
   }
 
 }

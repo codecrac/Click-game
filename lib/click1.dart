@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'Database.dart';
+import 'Avancement.dart';
 
 class Click1 extends StatefulWidget{
   @override
@@ -19,20 +21,39 @@ class _clickGame extends State<Click1> {
   bool gameStarted;
   String gagnerOuPerdu,forDesign;
   //VARIABLE
+
+
     @override
       initState() {
-        _start = 10;
-        _conserver_pour_changer = 10;
-
-        nbreCoupObjectif = 25;
         nombreAtteind = 0;forDesign='0';
-
-        niveauAtteinds = 1;
         gagnerOuPerdu ='';
         gameStarted =false;
+        recupererNiveauDansDb();//Initialisation des infos sur le niveau atteinds
         super.initState();
       }
 
+
+  /******Database******
+          * Recupererer***/
+      void recupererNiveauDansDb(){
+        DatabaseClient().recupererSeulItem().then((infosNiveauFromDb){
+          setState(() {
+            _start = infosNiveauFromDb['temps'];
+            _conserver_pour_changer = infosNiveauFromDb['temps'];
+
+            nbreCoupObjectif = infosNiveauFromDb['objectif'];
+            niveauAtteinds = infosNiveauFromDb['niveau'];
+          });
+        });
+      }
+  /***Update***/
+      void actualiserNiveauAtteinds(){
+          Avancement nouveauNiveau = new Avancement(this.niveauAtteinds, this.nbreCoupObjectif, this._conserver_pour_changer);
+          DatabaseClient().updateItem(nouveauNiveau);
+          recupererNiveauDansDb();
+      }
+
+  /******Database*********/
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -45,7 +66,9 @@ class _clickGame extends State<Click1> {
         ),
       );
 
-      //METHODE
+
+      /**************FONCTION********************/
+      /**************FONCTION********************/
       //INCREMENTER QUAND ON TAPE LE BOUTTON FLOTTANT
       Incrementation() {
         setState(() {
@@ -60,7 +83,7 @@ class _clickGame extends State<Click1> {
         setState( (){
           gagnerOuPerdu = 'gagner';
           gameStarted = false;
-          print('atteinds avant le temps');
+          print('atteinds avant le temps, gagner');
 
           nbreCoupObjectif+= 15;
           _conserver_pour_changer+=1;
@@ -71,6 +94,7 @@ class _clickGame extends State<Click1> {
           gameStarted =false;
 
         });
+        actualiserNiveauAtteinds();
       }
 
       void perdu(){
@@ -89,6 +113,7 @@ class _clickGame extends State<Click1> {
           gagnerOuPerdu ='perdu';
           gameStarted =false;
         });
+        actualiserNiveauAtteinds();
       }
 
 
@@ -139,7 +164,8 @@ class _clickGame extends State<Click1> {
         }
       }
 
-      //SCREEN
+      /**************SCREEN********************/
+      /**************SCREEN********************/
     return Scaffold(
       appBar: new AppBar(
         title: Text('Click game',style: TextStyle(fontSize: 20.0)),

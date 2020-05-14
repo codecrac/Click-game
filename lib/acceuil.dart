@@ -4,6 +4,15 @@ import 'contact_dev.dart';
 import 'package:flutter_test_app/Avancement.dart';
 
 import 'Database.dart';
+
+/*********************
+creation de la base de donnee
+*********************/
+  var db = new DatabaseClient();
+/*********************
+    fin de creation de la base de donnee
+ *********************/
+
 class PageAcceuil extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -55,9 +64,6 @@ class PageAcceuil extends StatelessWidget {
   }
 
       _goToClickGame(BuildContext context) async {
-
-        print('EXECUTION DE DK');
-//        dk();
         final run = await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){
                         return Click1();
                         }
@@ -71,11 +77,14 @@ class PageAcceuil extends StatelessWidget {
        ));
       }
   void dk() async{
-//    print('cretingggggggggggggggggggggggggggggggggggg');
-//    await DatabaseClient().createNewItem();
+    var db = DatabaseClient();
+//    await db.createNewItem();
+//    await db.recupererSeulItem();
 
-    var p = new Avancement(1, 25, 10);
-    DatabaseClient().updateItem(p);
+//    var p = new Avancement(905, 40, 19);
+//    await db.updateItem(p);
+//    await db.recupererSeulItem();
+    await db.deleteDb();
 
   }
 }

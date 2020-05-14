@@ -14,8 +14,8 @@ class Avancement {
   Map<String,dynamic> convertirEnMap(){
     Map<String, dynamic> map = {
       'niveau' : this.niveau,
-      'objectif' : this.niveau,
-      'temps' : this.niveau
+      'objectif' : this.objectif,
+      'temps' : this.temps
     };
     return map;
   }
